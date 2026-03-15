@@ -1,0 +1,106 @@
+#include<iostream>
+using namespace std;
+template <class T>
+class Array
+{
+    T* arr;
+    int size;
+    int n;
+
+public:
+    Array(int ssize)
+    {
+        size = ssize;
+        n = 0;
+        arr = new T[ssize];
+    }
+    void insert(T v)
+    {
+        if (n < size)
+        {
+            arr[n] = v;
+            n++;
+        }
+        else
+            cout << "Array is Full" << endl;
+    }
+    int search(T v)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (arr[i] == v)
+            {
+                return i;
+            }
+            
+        }
+        return -1;
+    }
+    void remove(T v)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (arr[i] == v)
+            {
+                
+                    for (int j = i; j < n - 1; j++)
+                    {
+                        arr[j] = arr[j + 1];
+                    }
+                    size--;
+                    i--;
+                
+            }
+        }
+    }
+    void Display()
+    {
+        for (int i = 0; i < n; i++)
+        {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+};
+int main()
+{
+    Array<int> intArr(5);
+    intArr.insert(2);
+    intArr.insert(6);
+    intArr.insert(7);
+    intArr.insert(8);
+    intArr.insert(3);
+    cout << "Found at index: " ;
+    if (intArr.search(7) >= 0)
+    {
+        cout << intArr.search(7) << endl;
+    }
+    else
+        cout << "No Value Exist" << endl;
+    Array<float> floatArr(3);
+    floatArr.insert(2.2);
+    floatArr.insert(3.5);
+    floatArr.insert(4.6);
+    floatArr.insert(6.5);//msg print "Array is Full"
+
+    Array<string> stringArr(10);
+    stringArr.insert("Abdullah");
+    stringArr.insert("Ali");
+    stringArr.insert("Zaman");
+    stringArr.insert("Umair");
+    stringArr.insert("Salman");
+    string name;
+    cout << "Enter name to search: ";
+    cin >> name;
+
+    if (stringArr.search(name) >= 0)
+    {
+        cout << "Found at index: ";
+
+        cout << stringArr.search(name) << endl;
+    }
+    else
+        cout << "No Name Exist" << endl;
+
+    stringArr.Display();
+}
