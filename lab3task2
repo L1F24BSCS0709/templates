@@ -1,0 +1,145 @@
+#include<iostream>
+using namespace std;
+template <class T>
+class Array
+{
+    T* arr;
+    int size;
+    int n;
+
+public:
+    Array(int ssize)
+    {
+        size = ssize;
+        n = 0;
+        arr = new T[ssize];
+    }
+    void insert(T v)
+    {
+        if (n < size)
+        {
+            arr[n] = v;
+            n++;
+        }
+        else
+            cout << "Array is Full" << endl;
+    }
+    int search(T v)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (arr[i] == v)
+            {
+                return i;
+            }
+
+        }
+        return -1;
+    }
+    void remove(T v)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (arr[i] == v)
+            {
+
+                for (int j = i; j < n - 1; j++)
+                {
+                    arr[j] = arr[j + 1];
+                }
+                size--;
+                i--;
+
+            }
+        }
+    }
+    void Display()
+    {
+        for (int i = 0; i < n; i++)
+        {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+};
+
+class Product
+{
+    int productID;
+    string productName;
+    float price;
+    int quantity;
+public:
+    Product():productID(0),quantity(0),price(0){}
+    Product(int pid, string n, float p, int q)
+    {
+        productID = pid;
+        productName = n;
+        price = p;
+        quantity = q;
+    }
+    friend ostream& operator<<(ostream& out, Product temp)
+    {
+        out << "Product name: " << temp.productName << endl
+            << "Product ID: " << temp.productID << endl
+            << "Price: " << temp.price << endl
+            << "Quantity: " << temp.quantity << endl;
+        return out;
+    }
+    bool operator==(Product temp)
+    {
+        return (productID == temp.productID);
+    }
+    void Display()
+    {
+        cout << "Product name: " << productName << endl
+            << "Product ID: " << productID << endl
+            << "Price: " << price << endl
+            << "Quantity: " <<quantity << endl;
+    }
+};
+int main()
+{
+    Array<Product> ap(10);
+    ap.insert(Product(101, "Laptop", 35000, 12));
+    ap.insert(Product(102, "Mobile", 35000, 10));
+    ap.insert(Product(103, "Charger", 35000, 18));
+    ap.insert(Product(104, "Earbuds", 35000, 11));
+    ap.insert(Product(105, "LED", 35000, 20));
+    ap.insert(Product(106, "Motor", 35000, 32));
+    ap.insert(Product(107, "Fan", 35000, 8));
+    ap.Display();
+    int search = 0;
+    cout << "Enter Product ID to Search: ";
+    cin >> search;
+    Product temp(search, "", 0.0,0);
+    if (ap.search(temp))
+    {
+        cout << "Product Found At Index: " << ap.search(temp) << endl;
+    }
+    else
+        cout << "Product Not Found." << endl;
+    cout << "Enter discontinued product ID: ";
+    cin >> search;
+
+    Product removeProduct(search, "", 0, 0);
+
+    ap.remove(removeProduct);
+
+    cout << "Searching again..."<<endl;
+
+    int index = ap.search(removeProduct);
+
+    if (index == -1)
+        cout << "Product no longer exists in store"<<endl;
+    else
+        cout << "Product still exists at index " << index << endl;
+
+    cout << "Trying to insert more products:"<<endl;
+
+    ap.insert(Product(107, "Printer", 200, 4));
+    ap.insert(Product(108, "Speaker", 100, 9));
+    ap.insert(Product(109, "Webcam", 70, 6));
+    ap.insert(Product(110, "SSD", 150, 10));
+    ap.insert(Product(111, "RAM", 120, 12)); // should show full array
+}
