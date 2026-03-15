@@ -1,0 +1,186 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+
+template <class T>
+class Array
+{
+    T* arr;
+    int size;
+    int n;
+
+public:
+    Array(int ssize)
+    {
+        size = ssize;
+        n = 0;
+        arr = new T[ssize];
+    }
+
+    void insert(T v)
+    {
+        if (n < size)
+        {
+            arr[n] = v;
+            n++;
+        }
+        else
+            cout << "Vocabulary list is full" << endl;
+    }
+
+    int search(T v)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (arr[i] == v)
+                return i;
+        }
+        return -1;
+    }
+
+    void remove(T v)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (arr[i] == v)
+            {
+                for (int j = i; j < n - 1; j++)
+                {
+                    arr[j] = arr[j + 1];
+                }
+                n--;
+                cout << "Word removed successfully" << endl;
+                return;
+            }
+        }
+        cout << "Word not found" << endl;
+    }
+
+    T get(int index)
+    {
+        return arr[index];
+    }
+
+    void Display()
+    {
+        for (int i = 0; i < n; i++)
+        {
+            cout << arr[i] << endl;
+        }
+    }
+};
+
+class Word
+{
+    string word;
+    string definition;
+    string partOFspech;
+
+public:
+    Word() {}
+
+    Word(string w, string d, string pos)
+    {
+        word = w;
+        definition = d;
+        partOFspech = pos;
+    }
+
+    string toLower(string s)
+    {
+        for (int i = 0; i < s.length(); i++)
+            s[i] = tolower(s[i]);
+        return s;
+    }
+
+    bool operator==(Word temp)
+    {
+        return toLower(word) == toLower(temp.word);
+    }
+
+    friend ostream& operator<<(ostream& out, Word temp)
+    {
+        out << "Word: " << temp.word << endl
+            << "Definition: " << temp.definition << endl
+            << "Part of Speech: " << temp.partOFspech << endl;
+        return out;
+    }
+
+    void Display()
+    {
+        cout << "Word: " << word << endl;
+        cout << "Definition: " << definition << endl;
+        cout << "Part of Speech: " << partOFspech << endl;
+    }
+};
+
+int main()
+{
+    Array<Word> vocab(15);
+
+    int total;
+    cout << "How many words you want to insert: ";
+    cin >> total;
+    cin.ignore();
+
+    for (int i = 0; i < total; i++)
+    {
+        string w, d, p;
+
+        cout << "Enter word: ";
+        getline(cin, w);
+
+        Word temp(w, "", "");
+
+        if (vocab.search(temp) != -1)
+        {
+            cout << "Word already in vocabulary" << endl;
+            i--;
+            continue;
+        }
+
+        cout << "Enter definition: ";
+        getline(cin, d);
+
+        cout << "Enter part of speech: ";
+        getline(cin, p);
+
+        vocab.insert(Word(w, d, p));
+    }
+
+    cout << endl << "All Words:" << endl;
+    vocab.Display();
+
+    string searchWord;
+    cout << endl << "Enter word to search: ";
+    getline(cin, searchWord);
+
+    int index = vocab.search(Word(searchWord, "", ""));
+
+    if (index != -1)
+    {
+        cout << "Word Found:" << endl;
+        vocab.get(index).Display();
+    }
+    else
+        cout << "Word not found" << endl;
+
+    string removeWord;
+    cout << endl << "Enter word to remove: ";
+    getline(cin, removeWord);
+
+    vocab.remove(Word(removeWord, "", ""));
+
+    cout << endl << "Vocabulary after removal:" << endl;
+    vocab.Display();
+
+    cout << endl << "Searching removed word again:" << endl;
+
+    int check = vocab.search(Word(removeWord, "", ""));
+
+    if (check == -1)
+        cout << "Word no longer exists" << endl;
+    else
+        cout << "Word still exists" << endl;
+}
